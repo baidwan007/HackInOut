@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<img id="myImageA" onclick="changeImageA()" src="pic_bulboff.gif" width="100" height="180">
+<img id="myImageB" onclick="changeImageB()" src="pic_bulboff.gif" width="100" height="180">
+<img id="myImageC" onclick="changeImageC()" src="pic_bulboff.gif" width="100" height="180">
+<img id="myImageD" onclick="main()" src="pic_bulboff.gif" width="100" height="180">
+
+
+<p>Click the light bulb to turn on/off the light.</p>
+<div id="chartContainer" style="height: 370px; width:100%;">fgh</div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+    window.onload=function() {
+        var dps = []; // dataPoints
+        var chart = new CanvasJS.Chart("chartContainer", {
+            title: {
+                text: "Dynamic Data"
+            },
+            axisY: {
+                includeZero: false
+            },
+            data: [{
+                type: "line",
+                dataPoints: dps
+            }]
+        });
+
+        var xVal = 0;
+        var yVal = 100;
+        var updateInterval = 1000;
+        var dataLength = 20; // number of dataPoints visible at any point
+
+        var updateChart = function (count) {
+
+            count = count || 1;
+
+            for (var j = 0; j < count; j++) {
+                yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+                dps.push({
+                    x: xVal,
+                    y: yVal
+                });
+                xVal++;
+            }
+
+            if (dps.length > dataLength) {
+                dps.shift();
+            }
+
+            chart.render();
+        };
+
+        updateChart(dataLength);
+        setInterval(function () {
+            updateChart()
+        }, updateInterval);
+    }
+
+    function changeImageA() {
+        var image = document.getElementById('myImageA');
+        if (image.src.match("bulbon")) {
+            image.src = "pic_bulboff.gif";
+        } else {
+            image.src = "pic_bulbon.gif";
+        }
+    }
+
+    function changeImageB() {
+        var image = document.getElementById('myImageB');
+        if (image.src.match("bulbon")) {
+            image.src = "pic_bulboff.gif";
+        } else {
+            image.src = "pic_bulbon.gif";
+        }
+    }
+
+    function changeImageC() {
+        var image = document.getElementById('myImageC');
+        if (image.src.match("bulbon")) {
+            image.src = "pic_bulboff.gif";
+        } else {
+            image.src = "pic_bulbon.gif";
+        }
+    }
+
+    function schedule(a, b) {
+        var imageA = document.getElementById('myImageA');
+        var imageB = document.getElementById('myImageB');
+        var imageC = document.getElementById('myImageC');
+        if (a == "switcha") {
+            imageA.click();
+        }
+        if (a == "switchb") {
+            imageB.click();
+        }
+        if (a == "switchc") {
+            imageC.click();
+        }
+    }
+
+    function resolveAfter5Seconds() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve('5sec');
+            }, 5000);
+        });
+    }
+
+    function resolveAfter1Seconds() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve('1 sec');
+            }, 1000);
+        });
+    }
+
+    async function schedulerMethod() {
+        var a = "switcha";
+        var b = "switchb";
+        var c = "switchc";
+        schedule(a, 1);
+        schedule(c, 1);
+        var result = await resolveAfter5Seconds();
+        console.log(result);
+        schedule(a, 0);
+        schedule(c, 0);
+        schedule(b, 1);
+        result = await resolveAfter5Seconds();
+        console.log(result);
+        schedule(b, 0);
+        schedule(a, 1);
+        schedule(c, 1);
+    }
+
+    function availableTimeStart() {
+        console.log("availabe time started............");
+    }
+
+    async function getdata() {
+        for (var i = 0; i < 5; i++) {
+            console.log("data logged for switch one");
+            var result = await resolveAfter1Seconds();
+            console.log(result);
+        }
+        for (var i = 0; i < 5; i++) {
+            console.log("data logged for switch two");
+            var result = await resolveAfter1Seconds();
+            console.log(result);
+        }
+        for (var i = 0; i < 5; i++) {
+            console.log("data logged for switch three");
+            var result = await resolveAfter1Seconds();
+            console.log(result);
+        }
+    }
+
+    async function startCircuit() {
+        console.log("in C");
+        console.log(new Date().getTime());
+        availableTimeStart();
+        getdata().then(() => console.log("printed all get data ..............."));
+    }
+
+    function main() {
+        schedulerMethod().then(() => (console.log("started schedule job..........." + new Date().getTime())));
+        console.log("hurray");
+        console.log(new Date().getTime());
+        var available = 1;
+        startCircuit().then(() => console.log("power print graph job has started returned from print alld ata.............." + available + new Date().getTime()));
+        console.log(new Date().getTime());
+    }
+
+
+</script>
+</body>
+</html>
